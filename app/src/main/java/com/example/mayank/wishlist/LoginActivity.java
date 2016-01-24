@@ -33,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this);
         mPhoneNumberView = (AutoCompleteTextView) findViewById(R.id.phone);
         if(getSupportActionBar() != null)
             getSupportActionBar().hide();
