@@ -12,5 +12,7 @@
     <string name="name_prompt">Name</string>
     <string name="list_fragment">List Fragment</string>
     <string name="two">Deals Fragment</string>
+    <string name="item_name">Item Name</string>
+    <string name="quant">Quantity</string>
     <!---->
 </resources>
