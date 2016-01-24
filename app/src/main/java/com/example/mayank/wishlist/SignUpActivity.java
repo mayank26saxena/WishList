@@ -1,5 +1,6 @@
 package com.example.mayank.wishlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -42,8 +43,11 @@ public class SignUpActivity extends AppCompatActivity {
                 user.signUpInBackground(new SignUpCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if(e == null)
+                        if (e == null) {
                             Snackbar.make(mPasswordView, "Registration Successful", Snackbar.LENGTH_LONG).show();
+                            Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+                            startActivity(i);
+                        }
                         else {
                             Snackbar.make(mPasswordView, "Registration Failed", Snackbar.LENGTH_LONG).show();
                             Log.v(this.getClass().getSimpleName(), e.getMessage());

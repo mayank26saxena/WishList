@@ -10,5 +10,7 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="name_prompt">Name</string>
+    <string name="list_fragment">List Fragment</string>
+    <string name="two">Deals Fragment</string>
     <!---->
 </resources>

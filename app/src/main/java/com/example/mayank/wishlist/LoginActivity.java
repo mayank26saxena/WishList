@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
@@ -97,8 +96,11 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseUser user, ParseException e) {
                             showProgress(false);
-                            if(user != null)
+                            if (user != null) {
                                 Snackbar.make(mPasswordView, "Log In Successful", Snackbar.LENGTH_LONG).show();
+                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(i);
+                            }
                             else
                                 Snackbar.make(mPasswordView, "Invalid Credentials", Snackbar.LENGTH_LONG).show();
                         }
