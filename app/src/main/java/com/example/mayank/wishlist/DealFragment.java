@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by Mayank on 24-01-2016.
- */
 public class DealFragment extends Fragment {
 
     public DealFragment() {

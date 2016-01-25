@@ -5,6 +5,9 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="info.androidhive.materialtabs.fragments.OneFragment">
     <android.support.v7.widget.RecyclerView
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/list_background"
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
