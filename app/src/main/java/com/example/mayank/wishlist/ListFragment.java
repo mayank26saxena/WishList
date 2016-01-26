@@ -1,6 +1,7 @@
 package com.example.mayank.wishlist;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -11,9 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,10 +23,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +33,9 @@ public class ListFragment extends Fragment {
     ListAdapter listAdapter;
     HashMap<String, Integer> items;
     Dialog dialog;
+    public static final String TAG = ListFragment.class.getSimpleName();
+    boolean b = false;
+
     public ListFragment() {}
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,18 +45,29 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
+            navigateToLogin();
+        } else {
+            Log.i(TAG, currentUser.getUsername());
+        }
+
         itemList = (RecyclerView) view.findViewById(R.id.list);
         addButton = (FloatingActionButton) view.findViewById(R.id.add_button);
         items = new HashMap<>();
         for(int i = 1 ; i <= 20 ; i++)
             items.put("Item " + Integer.toString(i), (i + 10));
         for(int i = 1 ; i <= 20 ; i++) {
-            ParseObject object = new ParseObject("ListItem");
-            object.put("username", ParseUser.getCurrentUser().getUsername());
-            object.put("item_name", "Item " + Integer.toString(i));
-            object.put("quantity", (i + 10));
-            object.put("added_on", new Date().toString());
-            object.saveInBackground();
+            if (ParseUser.getCurrentUser() != null) {
+
+                ParseObject o = new ParseObject("ListItem");
+                o.put("username", ParseUser.getCurrentUser().getUsername());
+                o.put("item_name", "Item " + Integer.toString(i));
+                o.put("quantity", (i + 10));
+                o.put("added_on", new Date().toString());
+                o.saveInBackground();
+            }
         }
         itemList.setHasFixedSize(true);
         itemList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -111,5 +119,12 @@ public class ListFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

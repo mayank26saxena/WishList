@@ -3,4 +3,7 @@
     <item
         android:title="Dev Tools"
         android:id="@+id/dev"/>
+    <item
+        android:title="Log Out"
+        android:id="@+id/logout" />
 </menu>

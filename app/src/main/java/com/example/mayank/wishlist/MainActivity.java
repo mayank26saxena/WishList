@@ -29,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             navigateToLogin();
         } else {
             Log.i(TAG, currentUser.getUsername());
         }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -91,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.dev :
                 startActivity(new Intent(getApplicationContext(), DevActivity.class));
                 return true;
+            case R.id.logout:
+                ParseUser.logOutInBackground();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             default :
                 break;
         }
