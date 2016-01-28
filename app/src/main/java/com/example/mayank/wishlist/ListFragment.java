@@ -39,7 +39,7 @@ public class ListFragment extends Fragment {
 
     String[] product_name_list = new String[40];
     String[] quantity_list = new String[40];
-
+    String username;
     public ListFragment() {
     }
 
@@ -55,6 +55,7 @@ public class ListFragment extends Fragment {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
+            Log.v(TAG,"No User logged in");
             navigateToLogin();
         } else {
             Log.i(TAG, currentUser.getUsername());
@@ -158,37 +159,41 @@ public class ListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.v(this.getClass().getSimpleName(), "onResume Called in List Fragment");
         // getAllItemsInWishlist();
     }
 
     public void getAllItemsInWishlist() {
-        String username = ParseUser.getCurrentUser().getUsername();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ListItem");
-        query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> items, ParseException e) {
-                if (e == null) {
-                    Log.d("Items : ", "Retrieved " + items.size() + " items.");
+        if(ParseUser.getCurrentUser() != null) {
+            String username = ParseUser.getCurrentUser().getUsername();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("ListItem");
+            query.whereEqualTo("username", username);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> items, ParseException e) {
+                    if (e == null) {
+                        Log.d("Items : ", "Retrieved " + items.size() + " items.");
 
-                    int n = items.size();
+                        int n = items.size();
 
-                    for (int i = 0; i < n; i++) {
-                        product_name_list[i] = (String) items.get(i).get("item_name");
-                        quantity_list[i] = (String) items.get(i).get("quantity");
-                        listAdapter.add(listAdapter.itemNames.size(),
-                                product_name_list[i], Integer.parseInt(quantity_list[i]));
+                        for (int i = 0; i < n; i++) {
+                            product_name_list[i] = (String) items.get(i).get("item_name");
+                            quantity_list[i] = (String) items.get(i).get("quantity");
+                            listAdapter.add(listAdapter.itemNames.size(),
+                                    product_name_list[i], Integer.parseInt(quantity_list[i]));
+                        }
+
+                    } else {
+                        Log.d("Items", "Error : " + e.getLocalizedMessage());
                     }
 
-                } else {
-                    Log.d("Items", "Error : " + e.getLocalizedMessage());
+
                 }
+            });
 
-
-            }
-        });
-
+        } else {
+            navigateToLogin();
+        }
 
     }
 

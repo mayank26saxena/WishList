@@ -1,5 +1,6 @@
 package com.example.mayank.wishlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,7 +51,7 @@ public class DealFragment extends Fragment {
         //initializeData();
         //initializeAdapter();
 
-        getAllItemsInWishlist();
+            getAllItemsInWishlist();
 
         return view;
     }
@@ -71,63 +72,64 @@ public class DealFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-
+        Log.v(this.getClass().getSimpleName(), "onResume Called in Deal Fragment");
     }
 
     public void getAllItemsInWishlist() {
-        String username = ParseUser.getCurrentUser().getUsername();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ListItem");
-        query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> items, ParseException e) {
-                if (e == null) {
-                    Log.d("Items : ", "Retrieved " + items.size() + " items.");
-                    int n = items.size();
+        if(ParseUser.getCurrentUser() != null) {
+            String username = ParseUser.getCurrentUser().getUsername();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("ListItem");
+            query.whereEqualTo("username", username);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> items, ParseException e) {
+                    if (e == null) {
+                        Log.d("Items : ", "Retrieved " + items.size() + " items.");
+                        int n = items.size();
 
-                    String[] product_name_list = new String[n];
+                        String[] product_name_list = new String[n];
 
-                    for (int i = 0; i < n; i++) {
-                        product_name_list[i] = (String) items.get(i).get("item_name");
+                        for (int i = 0; i < n; i++) {
+                            product_name_list[i] = (String) items.get(i).get("item_name");
+                        }
+
+                        findDealforItem(product_name_list, n);
+
+                    } else {
+                        Log.d("Items", "Error : " + e.getLocalizedMessage());
                     }
-
-                    findDealforItem(product_name_list, n);
-
-                } else {
-                    Log.d("Items", "Error : " + e.getLocalizedMessage());
                 }
-            }
-        });
+            });
+        } else {
+            startActivity(new Intent(getContext(), LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        }
     }
-
+    int finalPos;
+    int i;
     public void findDealforItem(final String[] product_name_list, int n) {
 
        /* website_list = new String[n];
         price_list = new String[n];
         discount_list = new String[n];
         delivery_date_list = new String[n]; */
-
-        int pos;
-
-        for (int i = 0; i < n; i++) {
-            pos = i;
+        for (i = 0; i < n; i++) {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("deal");
             query.whereEqualTo("product_name", product_name_list[i]);
-            final int finalPos = pos;
+            final String productName = product_name_list[i];
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
                     if (e == null && objects.size() > 0) {
-                        website_list[finalPos] = (String) objects.get(finalPos).get("website");
-                        price_list[finalPos] = (String) objects.get(finalPos).get("price");
-                        discount_list[finalPos] = (String) objects.get(finalPos).get("discount");
-                        delivery_date_list[finalPos] = (String) objects.get(finalPos).get("delivery_date");
-
-                        deals.add(new Deal("Product Name : " + product_name_list[finalPos], "Website : " + website_list[finalPos],
-                                "Price : " + price_list[finalPos], "Discount : " + discount_list[finalPos],
-                                "Delivery Date : " + delivery_date_list[finalPos]));
-
+                        for(int p = 0 ; p < objects.size() ; p++) {
+                            website_list[p] = (String) objects.get(p).get("website");
+                            price_list[p] = (String) objects.get(p).get("price");
+                            discount_list[p] = (String) objects.get(p).get("discount");
+                            delivery_date_list[p] = (String) objects.get(p).get("delivery_date");
+                            deals.add(new Deal("Product Name : " + productName, "Website : " + website_list[p],
+                                    "Price : " + price_list[p], "Discount : " + discount_list[p],
+                                    "Delivery Date : " + delivery_date_list[p]));
+                        }
                         initializeAdapter();
                     }
 
