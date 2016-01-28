@@ -1,5 +1,6 @@
 package com.example.mayank.wishlist;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -29,6 +31,7 @@ public class DealFragment extends Fragment {
     String[] discount_list = new String[40];
     String[] delivery_date_list = new String[40];
 
+    ProgressDialog myProgressDialog;
 
     public DealFragment() {
     }
@@ -42,6 +45,13 @@ public class DealFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.deal_fragment, container, false);
+
+        myProgressDialog = new ProgressDialog(getContext());
+        myProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        myProgressDialog.setMessage(getResources().getString(R.string.pls_wait_txt));
+        myProgressDialog.setCancelable(false);
+        myProgressDialog.show();
+
 
         rv = (RecyclerView) view.findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
@@ -73,6 +83,7 @@ public class DealFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.v(this.getClass().getSimpleName(), "onResume Called in Deal Fragment");
+        // getAllItemsInWishlist();
     }
 
     public void getAllItemsInWishlist() {
@@ -105,14 +116,10 @@ public class DealFragment extends Fragment {
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
     }
-    int finalPos;
+
     int i;
     public void findDealforItem(final String[] product_name_list, int n) {
 
-       /* website_list = new String[n];
-        price_list = new String[n];
-        discount_list = new String[n];
-        delivery_date_list = new String[n]; */
         for (i = 0; i < n; i++) {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("deal");
             query.whereEqualTo("product_name", product_name_list[i]);
@@ -131,6 +138,7 @@ public class DealFragment extends Fragment {
                                     "Delivery Date : " + delivery_date_list[p]));
                         }
                         initializeAdapter();
+                        myProgressDialog.dismiss();
                     }
 
                 }

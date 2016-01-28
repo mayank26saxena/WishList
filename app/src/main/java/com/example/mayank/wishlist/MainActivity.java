@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -74,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
+
     }
     private void navigateToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -102,4 +103,10 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    public void replaceFragment() {
+        viewPager.setCurrentItem(1);
+    }
+
+
 }

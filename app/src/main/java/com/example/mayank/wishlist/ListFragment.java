@@ -1,6 +1,7 @@
 package com.example.mayank.wishlist;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +42,9 @@ public class ListFragment extends Fragment {
     String[] product_name_list = new String[40];
     String[] quantity_list = new String[40];
     String username;
+
+    ProgressDialog myProgressDialog;
+
     public ListFragment() {
     }
 
@@ -52,6 +57,12 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
+
+        myProgressDialog = new ProgressDialog(getContext());
+        myProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        myProgressDialog.setMessage(getResources().getString(R.string.pls_wait_txt));
+        myProgressDialog.setCancelable(false);
+        myProgressDialog.show();
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
@@ -136,8 +147,13 @@ public class ListFragment extends Fragment {
                             o.put("quantity", quantity.getText().toString());
                             o.put("added_on", new Date().toString());
                             o.saveInBackground();
+
+                            ((MainActivity) getActivity()).replaceFragment();
+
                         } else
                             Snackbar.make(addButton, "No Field can be empty", Snackbar.LENGTH_LONG).show();
+
+
                     }
                 });
                 dialog.show();
@@ -148,6 +164,7 @@ public class ListFragment extends Fragment {
 
         return view;
     }
+
 
     private void navigateToLogin() {
         Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -182,6 +199,8 @@ public class ListFragment extends Fragment {
                             listAdapter.add(listAdapter.itemNames.size(),
                                     product_name_list[i], Integer.parseInt(quantity_list[i]));
                         }
+
+                        myProgressDialog.dismiss();
 
                     } else {
                         Log.d("Items", "Error : " + e.getLocalizedMessage());

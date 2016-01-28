@@ -14,5 +14,6 @@
     <string name="two">Deals Fragment</string>
     <string name="item_name">Item Name</string>
     <string name="quant">Quantity</string>
+    <string name="pls_wait_txt">Items loading. Please wait..</string>
     <!---->
 </resources>
