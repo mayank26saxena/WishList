@@ -6,6 +6,10 @@ How It Works
 -----------
 Just add your favourite items to the list using the '+' button and then swipe right to view the best price on your products in the list
 
+Documentation
+----------
+Check out the documentation at - [WishList](https://github.com/mayank26saxena/WishList/blob/master/Wishlist.pdf)
+
 Awards
 ---------
 Awarded Rank 19, all over India, at IndiaHacks 2016
